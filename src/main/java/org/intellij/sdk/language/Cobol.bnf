@@ -1,0 +1,64 @@
+{
+  parserClass="org.intellij.sdk.language.parser.CobolParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Cobol"
+  psiImplClassSuffix="Impl"
+  psiPackage="org.intellij.sdk.language.psi"
+  psiImplPackage="org.intellij.sdk.language.psi.impl"
+
+  elementTypeHolderClass="org.intellij.sdk.language.psi.CobolTypes"
+  elementTypeClass="org.intellij.sdk.language.psi.CobolElementType"
+  tokenTypeClass="org.intellij.sdk.language.psi.CobolTokenType"
+}
+
+CobolFile ::= division*
+
+// division ::= (line_number division_type division_content)
+
+division ::= (line_number DIVISION_TYPE_ID identification_content) | (line_number DIVISION_TYPE_DATA data_content) | (line_number DIVISION_TYPE_PROC procedure_content)
+
+division_type ::= DIVISION_TYPE_ID | DIVISION_TYPE_DATA | DIVISION_TYPE_PROC
+
+identification_content ::= identification_kv_pair*
+
+identification_kv_pair ::= (line_number IDENTIFICATION_KEY IDENTIFICATION_VALUE)
+
+data_content ::= data_section*
+
+data_section ::= (line_number DATA_SECTION_WS ws_section_content)
+
+ws_section_content ::= variable_declaration*
+
+variable_declaration ::= (line_number VARIABLE_NUMBER VARIABLE_NAME PIC_KEYWORD data_type VALUE_KEYWORD VALUE DOT)
+
+data_type ::= (BASE_TYPE PAREN_OPEN TYPE_SIZE PAREN_CLOSE)
+
+procedure_content ::= procedure_paragraph*
+
+procedure_paragraph ::= (line_number PARAGRAPH_NAME paragraph_body)
+
+paragraph_body ::= sentence*
+
+sentence ::= (statement* DOT)
+
+statement ::= (line_number command)
+
+argument_list ::= WORD*
+
+command ::= perform | stop | display
+
+perform ::= (VERB_PERFROM PARAGRAPH_NAME VARYING_KEYWORD VARIABLE_NAME FROM_KEYWORD VALUE BY_KEYWORD VALUE UNTIL_KEYWORD comparison)
+
+comparison ::= (VALUE COMPARISON_SIGN VALUE)
+
+stop ::= VERB_STOP_RUN
+
+display ::= (VERB_DISPLAY value_or_string+)
+
+value_or_string ::= VALUE | string_literal
+
+string_literal ::= (QUOTE ANY_CHARACTER* QUOTE)
+
+abcd ::= COMMENT
