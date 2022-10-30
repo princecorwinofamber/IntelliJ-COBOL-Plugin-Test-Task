@@ -34,7 +34,6 @@ WS_SECTION="WORKING-STORAGE SECTION\."
 VARIABLE_NUMBER=\d\d
 VARIABLE_NAME=[\dA-Z\-]+
 PIC="PIC"
-DATA_TYPE=.\([\d]+\)
 VALUE_KEYWORD="VALUE"
 NUMBER=[\d]+
 DOT="\."
@@ -115,8 +114,6 @@ PAREN_CLOSE=\)
 <WAIT_VARIABLE_NAME> {VARIABLE_NAME}                        { yybegin(WAIT_PIC); return CobolTypes.VARIABLE_NAME; }
 
 <WAIT_PIC> {PIC}                                            { yybegin(WAIT_DATA_TYPE); return CobolTypes.PIC_KEYWORD; }
-
-// <WAIT_DATA_TYPE> {DATA_TYPE}                                { yybegin(WAIT_VALUE_KEYWORD); return CobolTypes.DATA_TYPE; }
 
 <WAIT_DATA_TYPE> {BASE_TYPE}                                { yybegin(WAIT_PAREN_OPEN); return CobolTypes.BASE_TYPE; }
 
